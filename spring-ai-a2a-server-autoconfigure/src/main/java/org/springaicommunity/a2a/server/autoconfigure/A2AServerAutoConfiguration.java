@@ -39,6 +39,8 @@ import org.a2aproject.sdk.server.tasks.TaskStore;
 import org.a2aproject.sdk.spec.AgentCard;
 import org.a2aproject.sdk.spec.StreamingEventKind;
 import org.a2aproject.sdk.spec.Task;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springaicommunity.a2a.server.controller.AgentCardController;
@@ -170,7 +172,8 @@ public class A2AServerAutoConfiguration {
 		logger.info("Auto-configuring no-op PushNotificationSender (override to enable)");
 		return new PushNotificationSender() {
 			@Override
-			public void sendNotification(StreamingEventKind event, Task task) {
+			public void sendNotification(@NonNull StreamingEventKind event, @Nullable Task task) {
+				assert task != null;
 				logger.debug("Push notification requested for task {} but sender is disabled", task.id());
 			}
 		};
@@ -204,15 +207,13 @@ public class A2AServerAutoConfiguration {
 				corePoolSize, maxPoolSize, keepAliveSeconds);
 
 		AtomicInteger threadCounter = new AtomicInteger(1);
-		ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds,
-				TimeUnit.SECONDS, new LinkedBlockingQueue<>(), runnable -> {
+		return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<>(), runnable -> {
 					Thread thread = new Thread(runnable);
 					thread.setName("a2a-agent-executor-" + threadCounter.getAndIncrement());
 					thread.setDaemon(false); // Non-daemon threads as per A2A spec
 					return thread;
 				});
-
-		return executor;
 	}
 
 	/**

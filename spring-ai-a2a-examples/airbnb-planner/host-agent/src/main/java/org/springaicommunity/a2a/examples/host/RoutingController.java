@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST controller for the routing agent.
- * Accepts user queries and routes them to appropriate remote A2A agents.
+ * REST controller for the routing agent. Accepts user queries and routes them to
+ * appropriate remote A2A agents.
  *
  * @author Christian Tzolov
  */

@@ -17,7 +17,8 @@ import org.springframework.context.annotation.Bean;
 /**
  * An agent that can help questions about weather
  *
- * https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/airbnb_planner_multiagent/weather_agent
+ * <a href=
+ * "https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/airbnb_planner_multiagent/weather_agent">...</a>
  *
  * @author Christian Tzolov
  */

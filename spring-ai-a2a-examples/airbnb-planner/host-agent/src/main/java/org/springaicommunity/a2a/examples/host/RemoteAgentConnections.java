@@ -113,11 +113,9 @@ public class RemoteAgentConnections {
 					if (completedTask.artifacts() != null) {
 						StringBuilder sb = new StringBuilder();
 						for (Artifact artifact : completedTask.artifacts()) {
-							if (artifact.parts() != null) {
-								for (Part<?> part : artifact.parts()) {
-									if (part instanceof TextPart textPart) {
-										sb.append(textPart.text());
-									}
+							for (Part<?> part : artifact.parts()) {
+								if (part instanceof TextPart textPart) {
+									sb.append(textPart.text());
 								}
 							}
 						}
@@ -129,13 +127,14 @@ public class RemoteAgentConnections {
 
 			// Create client with consumer via builder
 			ClientConfig clientConfig = new ClientConfig.Builder().setAcceptedOutputModes(List.of("text")).build();
-			Client client = Client.builder(agentCard)
+			try (Client client = Client.builder(agentCard)
 				.clientConfig(clientConfig)
 				.withTransport(JSONRPCTransport.class, new JSONRPCTransportConfig())
 				.addConsumers(List.of(consumer))
-				.build();
+				.build()) {
 
-			client.sendMessage(message);
+				client.sendMessage(message);
+			}
 
 			// Wait for response (with timeout)
 			String result = responseFuture.get(60, java.util.concurrent.TimeUnit.SECONDS);
@@ -154,8 +153,7 @@ public class RemoteAgentConnections {
 	public String getAgentDescriptions() {
 		return this.cards.values()
 			.stream()
-			.map(card -> String.format("{\"name\": \"%s\", \"description\": \"%s\"}", card.name(),
-					card.description() != null ? card.description() : "No description"))
+			.map(card -> String.format("{\"name\": \"%s\", \"description\": \"%s\"}", card.name(), card.description()))
 			.collect(Collectors.joining("\n"));
 	}
 

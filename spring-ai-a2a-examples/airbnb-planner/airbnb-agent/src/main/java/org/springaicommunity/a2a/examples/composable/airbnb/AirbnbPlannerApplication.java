@@ -43,12 +43,8 @@ public class AirbnbPlannerApplication {
 
 	@Bean
 	CommandLineRunner logTools(ToolCallbackProvider toolCallbackProvider) {
-		return args -> {
-			logger.info("Available MCP tools: {}",
-					Stream.of(toolCallbackProvider.getToolCallbacks())
-						.map(tc -> tc.getToolDefinition().name())
-						.toList());
-		};
+		return args -> logger.info("Available MCP tools: {}",
+				Stream.of(toolCallbackProvider.getToolCallbacks()).map(tc -> tc.getToolDefinition().name()).toList());
 	}
 
 	@Bean

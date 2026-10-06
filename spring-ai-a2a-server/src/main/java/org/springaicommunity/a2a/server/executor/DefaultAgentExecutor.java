@@ -25,6 +25,7 @@ import org.a2aproject.sdk.server.tasks.AgentEmitter;
 import org.a2aproject.sdk.spec.A2AError;
 import org.a2aproject.sdk.spec.Message;
 import org.a2aproject.sdk.spec.TextPart;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ import org.springframework.ai.chat.client.ChatClient;
  * @author Christian Tzolov
  * @since 0.1.0
  */
+
 public class DefaultAgentExecutor implements AgentExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultAgentExecutor.class);
@@ -67,8 +69,8 @@ public class DefaultAgentExecutor implements AgentExecutor {
 	/**
 	 * Extracts text content from A2A message.
 	 */
-	public static String extractTextFromMessage(Message message) {
-		if (message == null || message.parts() == null) {
+	public static String extractTextFromMessage(@Nullable Message message) {
+		if (message == null) {
 			return "";
 		}
 		return message.parts()
